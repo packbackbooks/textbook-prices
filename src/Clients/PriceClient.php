@@ -1,4 +1,4 @@
-<?php namespace Packback\Prices\Providers;
+<?php namespace Packback\Prices\Clients;
 
 use Packback\Prices\PriceDto;
 use GuzzleHttp\Client as GuzzleClient;
@@ -22,6 +22,7 @@ class PriceClient
 
     public function __construct()
     {
+        $this->collection = [];
         $this->client = new GuzzleClient();
     }
 
@@ -61,6 +62,12 @@ class PriceClient
     public function createNewPrice()
     {
         return new PriceDto();
+    }
+
+    public function addPriceToCollection($price)
+    {
+        $this->collection[] = $price;
+        return $this;
     }
 
     public function getConditionFromString($string)

@@ -1,12 +1,11 @@
-<?php namespace Packback\Isbns\Prices\Clients;
+<?php namespace Packback\Prices\Clients;
 
-use Packback\Isbns\TypesFacade as IsbnTypes,
-    Packback\Isbns\Prices\Price;
-use ApaiIO\ApaiIO,
-    ApaiIO\Configuration\GenericConfiguration,
-    ApaiIO\Operations\Search;
+use Packback\Prices\Clients\PriceClient;
+use ApaiIO\Configuration\GenericConfiguration,
+    ApaiIO\Operations\Search,
+    ApaiIO\ApaiIO;
 
-class AmazonPriceClient implements PriceClientInterface
+class AmazonPriceClient extends PriceClient
 {
     protected $conf;
     protected $container;
@@ -15,9 +14,6 @@ class AmazonPriceClient implements PriceClientInterface
     public function __construct($config = [])
     {
         $this->conf = new GenericConfiguration();
-
-        // These credentials would, of course, be stored in a dotfile in a real project instead of committed to a repository;
-        // I'm including them here for your convenience
         try {
             $this->conf
                 ->setCountry('com')

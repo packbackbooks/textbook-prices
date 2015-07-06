@@ -1,6 +1,6 @@
-<?php namespace Packback\Prices\Providers;
+<?php namespace Packback\Prices\Clients;
 
-use Packback\Prices\Providers\PriceClient;
+use Packback\Prices\Clients\PriceClient;
 
 class AbeBooksPriceClient extends PriceClient
 {
@@ -16,8 +16,6 @@ class AbeBooksPriceClient extends PriceClient
 
     public function getPricesForIsbns($isbns = [])
     {
-        $this->collection = [];
-
         foreach ($isbns as $isbn) {
             $response = $this->addParam('isbn', $isbn)->send();
             $this->addPricesToCollection($response);
@@ -52,12 +50,6 @@ class AbeBooksPriceClient extends PriceClient
                 $this->addPriceToCollection($price);
             }
         }
-        return $this;
-    }
-
-    public function addPriceToCollection($price)
-    {
-        $this->collection[] = $price;
         return $this;
     }
 
