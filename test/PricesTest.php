@@ -7,12 +7,7 @@ class PriceCollectorTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $config = [
-            'abebooks' => [
-                'api_url' => 'http://search2.abebooks.com/search',
-                'access_key' => '91dacdce-70dc-448d-9629-56d9fef89195'
-            ]
-        ];
+        include 'config.php';
         $this->collector = new PriceCollector($config);
     }
 
