@@ -1,62 +1,36 @@
-<?php namespace Packback\Isbns\Prices\Clients;
+<?php namespace Packback\Prices\Providers;
 
-use Packback\Infrastructure\Clients\CurlHttpClient as HttpClient,
-    Packback\Isbns\Prices\Price,
-    Packback\Isbns\TypesFacade as IsbnTypes;
+use GuzzleHttp\Client as GuzzleClient;
 
-class AbeBooksPriceClient implements PriceClientInterface
+class AbeBooksPriceClient
 {
     protected $query = [];
-    protected $resource;
     protected $client;
 
     public function __construct($config = [])
     {
-        $this->client = new HttpClient($config['api_url']);
+        $this->client = new GuzzleClient();
+        $this->baseUrl = $config['api_url'];
         $this->query['clientkey'] = $config['access_key'];
-        $this->resource = $config['isbn_resource'];
     }
 
-    /**
-     * Fetch collection of Isbns\Price models with data from remote API
-     *
-     * @param  array $isbns Isbns to collect prices for
-     *
-     * @return array Collection of Isbn\Price models
-     */
     public function getPricesForIsbns($isbns = [])
     {
         return $this->getBookDataByIsbns($isbns);
     }
 
-    /**
-     * Collect book data from Amazon API
-     *
-     * @param  array                                          $isbns  ISBNs in need of data
-     *
-     * @return Packback\Infrastructure\Dtos\BookDtoCollection         Hydrated collection of Dtos
-     */
     public function getBookDataByIsbns($isbns = [])
     {
         $collection = [];
 
         foreach ($isbns as $isbn) {
             $response = $this->addParam('isbn', $isbn)->send();
-            $collection = $this->generateAbeBooksObjects($response, IsbnTypes::sellerAbeBooks());
+            $collection[] = $response;
         }
 
         return $collection;
     }
 
-
-    /**
-     * Helper method to parse amazon response payload and create collection
-     *
-     * @param  mixed                                         $response    Amazon response payload
-     * @param  string                                        $merchant_id Desired retailer enum
-     *
-     * @return ackback\Infrastructure\Dtos\BookDtoCollection              Hydrated collection of Dtos
-     */
     private function generateAbeBooksObjects($response, $merchant_id = null)
     {
         $collection = [];
@@ -111,31 +85,36 @@ class AbeBooksPriceClient implements PriceClientInterface
         return $price;
     }
 
-    /**
-     * Add search criteria to search object
-     *
-     * @param string                                                  $key   Search criteria key
-     * @param string                                                  $value Search criteria value
-     *
-     * @return Packback\Infrastructure\Clients\ProductClientInterface        Updated ProductClient
-     */
     public function addParam($key, $value)
     {
         $this->query[$key] = $value;
         return $this;
     }
 
-    /**
-     * Execute request and return object
-     *
-     * @return stdClass|false Reponse object
-     */
     public function send()
     {
-        $response = $this->client->sendRequest($this->resource, $this->query);
-        if ($response->getStatus() == 200) {
-            return $response->getPayload();
+        $querystring = http_build_query($this->query);
+        try {
+            $response = $this->client->get($this->baseUrl.'?'.$querystring);
+            if ($response->getStatusCode() == '200') {
+                return $this->decodeXml($response->getBody(true));
+            }
+        } catch ( \Exception $e) {
+            // Return error messaging
+            return $e->getMessage();
         }
-        return false;
+        return null;
+    }
+
+    public function decodeXml($string)
+    {
+        return json_decode(
+            json_encode(
+                simplexml_load_string(
+                    $string
+                )
+            ),
+            true
+        );
     }
 }

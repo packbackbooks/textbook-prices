@@ -1,17 +1,24 @@
 <?php namespace Packback\Prices;
 
-use GuzzleHttp\Client as GuzzleClient;
+use Packback\Prices\Providers\AbeBooksPriceClient;
 
 class PriceCollector
 {
     public function __construct($config = [])
     {
         $this->config = $config;
-        $this->client = new GuzzleClient();
+        $this->abeBooks = new AbeBooksPriceClient($config['abebooks']);
     }
 
-    public function getAllPrices()
+    public function getAllPrices($isbns = [])
     {
-        return ['test'];
+        $prices = [];
+        $prices['abebooks'] = $this->getAbeBooksPrices($isbns);
+        return $prices;
+    }
+
+    public function getAbeBooksPrices($isbns = [])
+    {
+        return $this->abeBooks->getPricesForIsbns($isbns);
     }
 }
