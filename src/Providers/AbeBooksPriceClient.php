@@ -1,120 +1,64 @@
 <?php namespace Packback\Prices\Providers;
 
-use GuzzleHttp\Client as GuzzleClient;
+use Packback\Prices\Providers\PriceClient;
 
-class AbeBooksPriceClient
+class AbeBooksPriceClient extends PriceClient
 {
+    const RETAILER = 'abebooks';
     protected $query = [];
-    protected $client;
 
     public function __construct($config = [])
     {
-        $this->client = new GuzzleClient();
+        parent::__construct();
         $this->baseUrl = $config['api_url'];
         $this->query['clientkey'] = $config['access_key'];
     }
 
     public function getPricesForIsbns($isbns = [])
     {
-        return $this->getBookDataByIsbns($isbns);
-    }
-
-    public function getBookDataByIsbns($isbns = [])
-    {
-        $collection = [];
+        $this->collection = [];
 
         foreach ($isbns as $isbn) {
             $response = $this->addParam('isbn', $isbn)->send();
-            $collection[] = $response;
+            $this->addPricesToCollection($response);
         }
 
-        return $collection;
+        return $this->collection;
     }
 
-    private function generateAbeBooksObjects($response, $merchant_id = null)
+    public function addPricesToCollection($response)
     {
-        $collection = [];
         // Check response, populate price object, send collection back
-        if (isset($response->Book)) {
-            foreach($response->Book as $offer) {
-                $price = new Price;
+        if (isset($response['Book'])) {
+            foreach($response['Book'] as $offer) {
+                $offer = (object) $offer;
+                $price = $this->createNewPrice();
                 if (isset($offer->listingPrice)) {
                     if (isset($offer->listingCondition) && strtolower($offer->listingCondition) == 'new book') {
-                        $price->condition = IsbnTypes::conditionNew();
+                        $price->condition = parent::CONDITION_NEW;
                     } elseif (isset($offer->itemCondition)) {
-                        $price->condition = IsbnTypes::getConditionFromString($offer->itemCondition);
+                        $price->condition = $this->getConditionFromString($offer->itemCondition);
                     }
                     if (empty($price->condition)) {
-                        $price->condition = IsbnTypes::conditionGood();
+                        $price->condition = parent::CONDITION_GOOD;
                     }
                     $price->isbn13 = $offer->isbn13;
                     $price->price = $offer->listingPrice;
                     $price->shipping_price = $offer->firstBookShipCost;
                     $price->url = 'http://affiliates.abebooks.com/c/74871/77797/2029?u='.urlencode($offer->listingUrl);
-                    $price->retailer = $merchant_id;
-                    $price->term = IsbnTypes::rentalTypePerpetual();
+                    $price->retailer = self::RETAILER;
+                    $price->term = parent::TERM_PERPETUAL;
                 }
-                $collection[] = $price;
+                $this->addPriceToCollection($price);
             }
         }
-        return $collection;
-    }
-
-    public function populatePriceData($offer, $item, $merchant_id)
-    {
-        // New price model object
-        $price = new Price;
-        // Set retailer
-        $price->retailer = $merchant_id;
-        // Populate ISBN 13
-        if (isset($item->ItemAttributes->EAN) ) {
-            $price->isbn13 = $item->ItemAttributes->EAN;
-        } elseif (isset($item->ItemAttributes->EISBN) ) {
-            $price->isbn13 = $item->ItemAttributes->EISBN;
-        }
-        // Populate URL
-        if (isset($item->DetailPageURL)) {
-            $price->url = $item->DetailPageURL;
-        }
-        // Populate condition
-        $price->condition = $price->getConditionFromString($offer->OfferAttributes->Condition);
-        // Populate term
-        $price->term = IsbnTypes::rentalTypePerpetual();
-        // Populate Price
-        $price->price = ((float)$offer->OfferListing->Price->Amount)/100;
-        return $price;
-    }
-
-    public function addParam($key, $value)
-    {
-        $this->query[$key] = $value;
         return $this;
     }
 
-    public function send()
+    public function addPriceToCollection($price)
     {
-        $querystring = http_build_query($this->query);
-        try {
-            $response = $this->client->get($this->baseUrl.'?'.$querystring);
-            if ($response->getStatusCode() == '200') {
-                return $this->decodeXml($response->getBody(true));
-            }
-        } catch ( \Exception $e) {
-            // Return error messaging
-            return $e->getMessage();
-        }
-        return null;
+        $this->collection[] = $price;
+        return $this;
     }
 
-    public function decodeXml($string)
-    {
-        return json_decode(
-            json_encode(
-                simplexml_load_string(
-                    $string
-                )
-            ),
-            true
-        );
-    }
 }
