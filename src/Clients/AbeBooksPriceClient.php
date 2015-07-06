@@ -5,7 +5,6 @@ use Packback\Prices\Clients\PriceClient;
 class AbeBooksPriceClient extends PriceClient
 {
     const RETAILER = 'abebooks';
-    protected $query = [];
 
     public function __construct($config = [])
     {

@@ -18,10 +18,10 @@ class PriceCollectorTest extends \PHPUnit_Framework_TestCase
             '9780001381889',
             '9780001831728',
             '9780002005098',
+            '9780000000644',
         ];
-        // $results = $this->collector->getAllPrices($isbns);
-        // $results = $this->collector->getAmazonPrices($isbns);
-        // print_r($results); exit;
+        $results = $this->collector->getAmazonPrices($isbns);
+        print_r($results); exit;
     }
 
 }

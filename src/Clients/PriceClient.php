@@ -18,11 +18,13 @@ class PriceClient
     const TERM_ONEMONTH = 'one-month';
     const TERM_DAILY = 'daily';
 
-    protected $client;
+    public $client;
+    public $query = [];
+    public $collection = [];
+    public $baseUrl = '';
 
     public function __construct()
     {
-        $this->collection = [];
         $this->client = new GuzzleClient();
     }
 

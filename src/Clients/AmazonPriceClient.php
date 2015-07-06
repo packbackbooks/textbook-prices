@@ -1,12 +1,16 @@
 <?php namespace Packback\Prices\Clients;
 
 use Packback\Prices\Clients\PriceClient;
+use Packback\Prices\PriceDto;
 use ApaiIO\Configuration\GenericConfiguration,
     ApaiIO\Operations\Search,
     ApaiIO\ApaiIO;
 
 class AmazonPriceClient extends PriceClient
 {
+    const RETAILER = 'amazon';
+    const RETAILER_MARKETPLACE = 'amazon-marketplace';
+
     protected $conf;
     protected $container;
     protected $search;
@@ -28,28 +32,8 @@ class AmazonPriceClient extends PriceClient
         $this->search = new Search();
     }
 
-    /**
-     * Fetch collection of Isbns\Price models with data from remote API
-     *
-     * @param  array $isbns Isbns to collect prices for
-     *
-     * @return array Collection of Isbn\Price models
-     */
     public function getPricesForIsbns($isbns = [])
     {
-        return $this->getBookDataByIsbns($isbns);
-    }
-
-    /**
-     * Collect book data from Amazon API
-     *
-     * @param  array                                          $isbns  ISBNs in need of data
-     *
-     * @return Packback\Infrastructure\Dtos\BookDtoCollection         Hydrated collection of Dtos
-     */
-    public function getBookDataByIsbns($isbns = [])
-    {
-        $collection = [];
         $isbn_groups = [];
 
         if (count($isbns) > 10) {
@@ -70,26 +54,17 @@ class AmazonPriceClient extends PriceClient
 
             // Get response for Marketplace books
             $response = $this->send();
-            $marketplace_collection = $this->generateAmazonObjects($response, IsbnTypes::sellerAmazon());
+            $marketplace_collection = $this->generateAmazonObjects($response, self::RETAILER);
             // Get response for only Amazon books
             $response = $this->addParam('MerchantId', 'Amazon')->send();
-            $amazon_collection = $this->generateAmazonObjects($response, IsbnTypes::sellerAmazonMarketplace());
+            $amazon_collection = $this->generateAmazonObjects($response, self::RETAILER_MARKETPLACE);
 
-            $collection = array_merge($amazon_collection, $marketplace_collection);
+            $this->collection = array_merge($amazon_collection, $marketplace_collection);
         }
 
-        return $collection;
+        return $this->collection;
     }
 
-
-    /**
-     * Helper method to parse amazon response payload and create collection
-     *
-     * @param  mixed                                         $response    Amazon response payload
-     * @param  string                                        $merchant_id Desired retailer enum
-     *
-     * @return ackback\Infrastructure\Dtos\BookDtoCollection              Hydrated collection of Dtos
-     */
     private function generateAmazonObjects($response, $merchant_id = null)
     {
         $collection = [];
@@ -116,7 +91,7 @@ class AmazonPriceClient extends PriceClient
     public function populatePriceData($offer, $item, $merchant_id)
     {
         // New price model object
-        $price = new Price;
+        $price = new PriceDto;
         // Set retailer
         $price->retailer = $merchant_id;
         // Populate ISBN 13
@@ -130,32 +105,20 @@ class AmazonPriceClient extends PriceClient
             $price->url = $item->DetailPageURL;
         }
         // Populate condition
-        $price->condition = IsbnTypes::getConditionFromString($offer->OfferAttributes->Condition);
+        $price->condition = parent::getConditionFromString($offer->OfferAttributes->Condition);
         // Populate term
-        $price->term = IsbnTypes::rentalTypePerpetual();
+        $price->term = parent::TERM_PERPETUAL;
         // Populate Price
         $price->price = ((float)$offer->OfferListing->Price->Amount)/100;
         return $price;
     }
 
-    /**
-     * Add search criteria to search object
-     *
-     * @param string                                                  $key   Search criteria key
-     * @param string                                                  $value Search criteria value
-     *
-     */
     public function addParam($key, $value)
     {
         $this->search->{'set'.$key}($value);
         return $this;
     }
 
-    /**
-     * Execute request and return object
-     *
-     * @return stdClass|false Reponse object
-     */
     public function send()
     {
         try {
