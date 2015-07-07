@@ -14,59 +14,38 @@ class CheggPriceClientTest extends \PHPUnit_Framework_TestCase
 
     public function testItBuildsPriceCollectionFromValidResponse()
     {
-        $this->assertTrue(true);
+        $response = $this->generateResponse(['shipping' => true]);
+        $this->client->collection = [];
+
+        $results = $this->client->addPricesToCollection($response);
+
+        foreach ($this->client->collection as $key => $book) {
+            $this->assertEquals($response['Items']['Item']['EAN'], $book->isbn13 );
+            $this->assertEquals($response['Items']['Item']['Terms']['Term'][0]['Price'], $book->price );
+            $this->assertEquals('chegg', $book->retailer );
+        }
     }
 
-    /*
-    public function testItBuildsPriceCollectionFromValidResponse()
+    public function testItBuildsPriceCollectionFromValidResponseWithoutShipping()
     {
         $response = $this->generateResponse();
         $this->client->collection = [];
 
         $results = $this->client->addPricesToCollection($response);
+
         foreach ($this->client->collection as $key => $book) {
-            $this->assertEquals($response['Book'][$key]['isbn13'], $book->isbn13 );
-            $this->assertEquals($response['Book'][$key]['listingPrice'], $book->price );
-            $this->assertEquals($response['Book'][$key]['firstBookShipCost'], $book->shipping_price );
-            $this->assertEquals('abebooks', $book->retailer );
+            $this->assertEquals($response['Items']['Item']['EAN'], $book->isbn13 );
+            $this->assertEquals($response['Items']['Item']['Terms']['Term'][0]['Price'], $book->price );
+            $this->assertEquals('chegg', $book->retailer );
         }
     }
 
-    public function testItBuildsPriceCollectionFromValidResponseWithNewCondition()
+    public function testItDoesNotBuildPriceCollectionWithInvalidResponse()
     {
-        $response = $this->generateResponse(1, ['condition' => 'new book']);
+        $response = [uniqid()];
         $this->client->collection = [];
 
         $results = $this->client->addPricesToCollection($response);
-        foreach ($this->client->collection as $key => $book) {
-            $this->assertEquals($response['Book'][$key]['isbn13'], $book->isbn13 );
-            $this->assertEquals($response['Book'][$key]['listingPrice'], $book->price );
-            $this->assertEquals($response['Book'][$key]['firstBookShipCost'], $book->shipping_price );
-            $this->assertEquals('abebooks', $book->retailer );
-        }
-    }
-
-    public function testItBuildsPriceCollectionFromValidResponseWithEmptyCondition()
-    {
-        $response = $this->generateResponse(1, ['condition' => '']);
-        $this->client->collection = [];
-
-        $results = $this->client->addPricesToCollection($response);
-        foreach ($this->client->collection as $key => $book) {
-            $this->assertEquals($response['Book'][$key]['isbn13'], $book->isbn13 );
-            $this->assertEquals($response['Book'][$key]['listingPrice'], $book->price );
-            $this->assertEquals($response['Book'][$key]['firstBookShipCost'], $book->shipping_price );
-            $this->assertEquals('abebooks', $book->retailer );
-        }
-    }
-
-    public function testItDoesNotBuildPriceCollectionFromInvalidResponse()
-    {
-        $response = [];
-        $this->client->collection = [];
-
-        $results = $this->client->addPricesToCollection($response);
-
         $this->assertEquals([], $this->client->collection);
     }
 
@@ -74,7 +53,7 @@ class CheggPriceClientTest extends \PHPUnit_Framework_TestCase
     {
         $guzzleResponse = m::mock();
         $isbn = uniqid();
-        $xmlResponse = $this->generateXmlResponse($isbn);
+        $xmlResponse = $this->generateXmlResponse();
 
         $this->client->client->shouldReceive('get')
             ->andReturn($guzzleResponse);
@@ -85,89 +64,52 @@ class CheggPriceClientTest extends \PHPUnit_Framework_TestCase
             ->andReturn($xmlResponse);
 
         $results = $this->client->getPricesForIsbns([$isbn]);
-        foreach ($results as $result) {
-            $this->assertEquals($isbn, $result->isbn13);
-        }
     }
 
-    private function generateResponse($count = 3, $params = [])
+    private function generateXmlResponse()
     {
-        $cc = 0;
-        while ($cc < $count) {
-            $book = [
-                'bookId' => uniqid(),
-                'isbn10' => uniqid(),
-                'isbn13' => uniqid(),
-                'quantity' => rand(1,10),
-                'vendorCurrency' => uniqid(),
-                'listingPrice' => uniqid(),
-                'firstBookShipCost' => uniqid(),
-                'extraBookShipCost' => uniqid(),
-                'minShipDays' => uniqid(),
-                'maxShipDays' => uniqid(),
-                'totalListingPrice' => uniqid(),
-                'listingUrl' => uniqid(),
-                'author' => uniqid(),
-                'title' => uniqid(),
-                'publisherName' => uniqid(),
-                'vendorName' => uniqid(),
-                'vendorLocation' => uniqid(),
-                'vendorId' => uniqid(),
-                'sellerRating' => uniqid(),
-                'keywords' => uniqid(),
-                'bindingType' => uniqid(),
+        return '<?xml version="1.0" encoding="utf-8"?>
+            <CheggAPIResponse>
+                <Items><Item><BookInfo>
+                    <Title>Abbreviated Injury Scale (Ais) 1990 - Update 98</Title>
+                    <EditionNumber>1</EditionNumber>
+                    <EditionType></EditionType>
+                    <PubDate></PubDate>
+                    <PubName>Association for the Advancement of Baltic Studies</PubName>
+                    <ListPrice>235.29</ListPrice>
+                    <Authors/>
+                    <ImageThumb>http://c.cheggcdn.com/covers2/imagena.gif</ImageThumb>
+                    <ImageSmall>http://c.cheggcdn.com/covers2/imagenalarge.gif</ImageSmall>
+                    <ImageMedium>http://c.cheggcdn.com/covers2/imagenalarge.gif</ImageMedium>
+                    <ImageLarge>http://c.cheggcdn.com/covers2/imagenalarge.gif</ImageLarge></BookInfo><ISBN>0000002003</ISBN><EAN>9780000002006</EAN><Terms><Term><Price>9.99</Price><Id>157</Id><Term>SEMESTER</Term><Name>Semester Rental</Name><Term_days>164</Term_days><Due_date>2015-12-18</Due_date><Orig_price>9.99</Orig_price><Discount_info>0</Discount_info><Pid>LBP-980139|867189a2-ef39-490e-9ed6-c42624bbdd16|1</Pid></Term><Term><Price>9.99</Price><Id>157</Id><Term>QUARTER</Term><Name>Quarter Rental</Name><Term_days>164</Term_days><Due_date>2015-12-18</Due_date><Orig_price>9.99</Orig_price><Discount_info>0</Discount_info><Pid>LBP-980139|867189a2-ef39-490e-9ed6-c42624bbdd16|1</Pid></Term><Term><Price>9.99</Price><Id>157</Id><Term>SUMMER</Term><Name>Summer Rental</Name><Term_days>164</Term_days><Due_date>2015-12-18</Due_date><Orig_price>9.99</Orig_price><Discount_info>0</Discount_info><Pid>LBP-980139|867189a2-ef39-490e-9ed6-c42624bbdd16|1</Pid></Term></Terms><Renting>1</Renting><ShippingPrices><ShippingPrice><Method_name>Ground Shipping</Method_name><Cost_first>5.99</Cost_first><Cost_each>2.99</Cost_each><Guarantee_date>07-15-2015</Guarantee_date></ShippingPrice><ShippingPrice><Method_name>Standard</Method_name><Cost_first>4.99</Cost_first><Cost_each>3.99</Cost_each><Guarantee_date>07-17-2015</Guarantee_date></ShippingPrice><ShippingPrice><Method_name>UPS 3rd Day</Method_name><Cost_first>5.99</Cost_first><Cost_each>2.99</Cost_each><Guarantee_date>07-11-2015</Guarantee_date></ShippingPrice><ShippingPrice><Method_name>UPS 2nd Day</Method_name><Cost_first>10.99</Cost_first><Cost_each>5.99</Cost_each><Guarantee_date>07-10-2015</Guarantee_date></ShippingPrice><ShippingPrice><Method_name>UPS Next Day Air</Method_name><Cost_first>16.99</Cost_first><Cost_each>10.99</Cost_each><Guarantee_date>07-08-2015</Guarantee_date>
+                    </ShippingPrice></ShippingPrices>
+                    </Item></Items>
+            </CheggAPIResponse>';
+    }
+
+    private function generateResponse($options = [])
+    {
+        $book = [
+            'EAN' => uniqid(),
+            'Terms' => [
+                'Term' => [
+                    0 => [
+                        'Price' => rand(10,200),
+                        'Term' => 'new',
+                    ],
+                ],
+            ],
+        ];
+        if (isset($options['shipping']) && $options['shipping'] == true) {
+            $book['ShippingPrices'] = [
+                'ShippingPrice' => [
+                    0 => [
+                        'Cost_first' => rand(10,200),
+                    ],
+                ]
             ];
-            if (isset($params['condition'])) {
-                $book['listingCondition'] = $params['condition'];
-            } else {
-                $book['listingCondition'] = 'Very Good';
-                $book['itemCondition'] = 'Very Good';
-            }
-            $results['Book'][] = $book;
-            $cc++;
         }
+        $results['Items']['Item'] = $book;
         return $results;
     }
-
-    private function generateXmlResponse($isbn, $count = 2)
-    {
-        $cc = 0;
-        $results = '<?xml version="1.0" encoding="UTF-8"?><searchResults><resultCount>495144</resultCount>';
-        while ($cc < $count) {
-            $results .= $this->generateXmlBookObject($isbn);
-            $cc++;
-        }
-        $results .= '</searchResults>';
-        return $results;
-    }
-
-    private function generateXmlBookObject($isbn)
-    {
-        return '<Book>
-            <bookId>959356004</bookId>
-            <isbn10>025536251X</isbn10>
-            <isbn13>'.$isbn.'</isbn13>
-            <listingCondition>NOT NEW BOOK</listingCondition>
-            <itemCondition>Very Good</itemCondition>
-            <quantity>1</quantity>
-            <vendorCurrency>GBP</vendorCurrency>
-            <listingPrice>1.0</listingPrice>
-            <firstBookShipCost>2.24</firstBookShipCost>
-            <extraBookShipCost>0.0</extraBookShipCost>
-            <minShipDays>0</minShipDays>
-            <maxShipDays>0</maxShipDays>
-            <totalListingPrice>3.24</totalListingPrice>
-            <listingUrl>www.abebooks.com/servlet/BookDetailsPL?bi=959356004&amp;cm_ven=sws&amp;cm_cat=sws&amp;cm_pla=sws&amp;cm_ite=959356004</listingUrl>
-            <author>Ray Robinson</author>
-            <title>Efficiency and the National Health Service: A Case for Internal Markets (Health)</title>
-            <publisherName>Institute of Economic Affairs (I</publisherName>
-            <vendorName>The Orchard Bookshop.</vendorName>
-            <vendorLocation>Hayes, United Kingdom</vendorLocation>
-            <vendorId>676907</vendorId>
-            <sellerRating>5</sellerRating>
-            <keywords>SUBJECTS</keywords>
-            <bindingType>S</bindingType>
-        </Book>';
-    }
-    */
 }

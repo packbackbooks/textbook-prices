@@ -29,7 +29,7 @@ class CheggPriceClient extends PriceClient
         return $this->collection;
     }
 
-    private function addPricesToCollection($payload)
+    public function addPricesToCollection($payload)
     {
         if ($this->isValidCheggResponse($payload)) {
             foreach ($payload['Items']['Item']['Terms']['Term'] as $term) {
@@ -54,10 +54,10 @@ class CheggPriceClient extends PriceClient
 
     public function setCheggShippingPrice($item)
     {
-        if (isset($item->ShippingPrices)
-            && isset($item->ShippingPrices->ShippingPrice)) {
-            foreach ($item->ShippingPrices->ShippingPrice as $shipping_price) {
-                $prices[] = $shipping_price->Cost_first;
+        if (isset($item['ShippingPrices'])
+            && isset($item['ShippingPrices']['ShippingPrice'])) {
+            foreach ($item['ShippingPrices']['ShippingPrice'] as $shipping_price) {
+                $prices[] = $shipping_price['Cost_first'];
             }
             return min($prices);
         }
