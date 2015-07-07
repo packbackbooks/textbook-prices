@@ -99,4 +99,27 @@ class PriceClient
         }
     }
 
+    public function getTermFromString($string = null)
+    {
+        switch (strtolower($string)) {
+            case 'used':
+            case 'new':
+                return self::TERM_PERPETUAL;
+            case 'rent for 125 days':
+            case 'semester':
+                return self::TERM_SEMESTER;
+            case 'rent for 90 days':
+            case 'quarter':
+                return self::TERM_QUARTER;
+            case 'rent for 60 days':
+                return self::TERM_TWOMONTH;
+            case 'rent for 45 days':
+                return self::TERM_HALFQUARTER;
+            case 'rent for 30 days':
+                return self::TERM_ONEMONTH;
+            default:
+                return null;
+        }
+    }
+
 }

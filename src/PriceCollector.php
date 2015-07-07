@@ -2,6 +2,7 @@
 
 use Packback\Prices\Clients\AbeBooksPriceClient;
 use Packback\Prices\Clients\AmazonPriceClient;
+use Packback\Prices\Clients\CheggPriceClient;
 
 class PriceCollector
 {
@@ -10,7 +11,7 @@ class PriceCollector
         $this->config = $config;
         $this->abeBooks = new AbeBooksPriceClient($config['abebooks']);
         $this->amazon = new AmazonPriceClient($config['amazon']);
-        $this->bookrenter = new BookRenterPriceClient($config['bookrenter']);
+        $this->chegg = new CheggPriceClient($config['chegg']);
     }
 
     public function getAllPrices($isbns = [])
@@ -18,6 +19,7 @@ class PriceCollector
         $prices = [];
         $prices['abebooks'] = $this->getAbeBooksPrices($isbns);
         $prices['amazon'] = $this->getAmazonPrices($isbns);
+        $prices['chegg'] = $this->getCheggPrices($isbns);
         return $prices;
     }
 
@@ -31,8 +33,8 @@ class PriceCollector
         return $this->amazon->getPricesForIsbns($isbns);
     }
 
-    public function getBookRenterPrices($isbns = [])
+    public function getCheggPrices($isbns = [])
     {
-        return $this->bookrenter->getPricesForIsbns($isbns);
+        return $this->chegg->getPricesForIsbns($isbns);
     }
 }

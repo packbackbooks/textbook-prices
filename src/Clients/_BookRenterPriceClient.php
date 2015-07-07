@@ -1,4 +1,4 @@
-<?php namespace Packback\Isbns\Prices\Clients;
+<?php namespace Packback\Prices\Clients;
 
 use Packback\Infrastructure\Clients\CurlHttpClient as HttpClient,
     Packback\Isbns\Prices\Price,
@@ -6,6 +6,8 @@ use Packback\Infrastructure\Clients\CurlHttpClient as HttpClient,
 
 class BookRenterPriceClient extends CommissionJunctionPriceClient
 {
+    const RETAILER = 'bookrenter';
+
     public function __construct($config = [])
     {
         parent::__construct($config['cj_advertiser_id']);
@@ -30,7 +32,7 @@ class BookRenterPriceClient extends CommissionJunctionPriceClient
     private function addBookRenterMetaToPrices($prices = [])
     {
         for ($i = 0; $i < count($prices); $i++) {
-            $prices[$i]->retailer = IsbnTypes::sellerBookRenter();
+            $prices[$i]->retailer = self::RETAILER;
             $prices[$i]->condition = IsbnTypes::conditionNew();
             $prices[$i]->term = IsbnTypes::rentalTypeSemester();
         }
