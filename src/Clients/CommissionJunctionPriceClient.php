@@ -13,11 +13,6 @@ class CommissionJunctionPriceClient
      */
     protected $query = [];
 
-    /**
-     * Client to do the talkin'
-     *
-     * @var Packback\Infrastructure\Clients\GuzzleHttpClient
-     */
     protected $client;
 
     public function __construct($advertiser_id = null)

@@ -11,13 +11,20 @@ class AmazonPriceClient extends PriceClient
     const RETAILER = 'amazon';
     const RETAILER_MARKETPLACE = 'amazon-marketplace';
 
-    protected $conf;
-    protected $container;
-    protected $search;
+    public $conf;
+    public $container;
+    public $search;
 
     public function __construct($config = [])
     {
         $this->conf = new GenericConfiguration();
+        $this->setConfiguration($config);
+        $this->container = new ApaiIO($this->conf);
+        $this->search = new Search();
+    }
+
+    public function setConfiguration($config = [])
+    {
         try {
             $this->conf
                 ->setCountry('com')
@@ -28,8 +35,6 @@ class AmazonPriceClient extends PriceClient
             echo $e->getMessage();
         }
         $this->conf->setResponseTransformer('\ApaiIO\ResponseTransformer\XmlToSimpleXmlObject');
-        $this->container = new ApaiIO($this->conf);
-        $this->search = new Search();
     }
 
     public function getPricesForIsbns($isbns = [])
@@ -54,10 +59,10 @@ class AmazonPriceClient extends PriceClient
 
             // Get response for Marketplace books
             $response = $this->send();
-            $marketplace_collection = $this->generateAmazonObjects($response, self::RETAILER);
+            $marketplace_collection = $this->generateAmazonObjects($response, self::RETAILER_MARKETPLACE);
             // Get response for only Amazon books
             $response = $this->addParam('MerchantId', 'Amazon')->send();
-            $amazon_collection = $this->generateAmazonObjects($response, self::RETAILER_MARKETPLACE);
+            $amazon_collection = $this->generateAmazonObjects($response, self::RETAILER);
 
             $this->collection = array_merge($amazon_collection, $marketplace_collection);
         }
@@ -128,7 +133,7 @@ class AmazonPriceClient extends PriceClient
                     $response
                 )
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
 

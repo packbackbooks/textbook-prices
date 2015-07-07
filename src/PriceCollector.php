@@ -10,6 +10,7 @@ class PriceCollector
         $this->config = $config;
         $this->abeBooks = new AbeBooksPriceClient($config['abebooks']);
         $this->amazon = new AmazonPriceClient($config['amazon']);
+        $this->bookrenter = new BookRenterPriceClient($config['bookrenter']);
     }
 
     public function getAllPrices($isbns = [])
@@ -28,5 +29,10 @@ class PriceCollector
     public function getAmazonPrices($isbns = [])
     {
         return $this->amazon->getPricesForIsbns($isbns);
+    }
+
+    public function getBookRenterPrices($isbns = [])
+    {
+        return $this->bookrenter->getPricesForIsbns($isbns);
     }
 }
