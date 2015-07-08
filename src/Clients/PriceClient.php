@@ -83,6 +83,7 @@ class PriceClient
             case 'rent for 30 days':
                 return self::CONDITION_NEW;
             case 'very good':
+            case 'like new':
             case 'as new':
             case 'good':
             case 'used':
