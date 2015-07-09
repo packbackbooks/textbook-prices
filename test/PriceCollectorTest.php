@@ -9,6 +9,10 @@ class PriceCollectorTest extends \PHPUnit_Framework_TestCase
     {
         include 'config.php';
         $this->collector = new PriceCollector($config);
+        $this->collector->abebooks = m::mock('Packback\Prices\Clients\AbeBooksPriceClient');
+        $this->collector->amazon = m::mock('Packback\Prices\Clients\AmazonPriceClient');
+        $this->collector->chegg = m::mock('Packback\Prices\Clients\CheggPriceClient');
+        $this->collector->valore = m::mock('Packback\Prices\Clients\ValoreBooksPriceClient');
     }
 
     public function testItAll()
@@ -23,8 +27,45 @@ class PriceCollectorTest extends \PHPUnit_Framework_TestCase
             '9780001831728',
             '9780002005098',
         ];
-        // $results = $this->collector->getCheggPrices($isbns);
-        // print_r($results); exit;
+        $this->collector->abebooks->shouldReceive('getPricesForIsbns')
+            ->with($isbns)
+            ->once()
+            ->andReturn([
+                0 => $this->generatePriceResult()
+            ]);
+        $this->collector->amazon->shouldReceive('getPricesForIsbns')
+            ->with($isbns)
+            ->once()
+            ->andReturn([
+                0 => $this->generatePriceResult()
+            ]);
+        $this->collector->chegg->shouldReceive('getPricesForIsbns')
+            ->with($isbns)
+            ->once()
+            ->andReturn([
+                0 => $this->generatePriceResult()
+            ]);
+        $this->collector->valore->shouldReceive('getPricesForIsbns')
+            ->with($isbns)
+            ->once()
+            ->andReturn([
+                0 => $this->generatePriceResult()
+            ]);
+
+        $results = $this->collector->getAllPrices($isbns);
+    }
+
+    private function generatePriceResult()
+    {
+        return [
+            'condition' => uniqid(),
+            'isbn13' => uniqid(),
+            'price' => uniqid(),
+            'shipping_price' => uniqid(),
+            'url' => uniqid(),
+            'retailer' => uniqid(),
+            'term' => uniqid(),
+        ];
     }
 
 }
