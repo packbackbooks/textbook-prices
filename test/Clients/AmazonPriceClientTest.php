@@ -44,7 +44,7 @@ class AmazonPriceClientTest extends \PHPUnit_Framework_TestCase
 
     public function testItSetsConfigurationWithException()
     {
-        include 'config.php';
+        include 'config.example.php';
 
         $this->client->conf->shouldReceive('setCountry')
             ->with('com')
