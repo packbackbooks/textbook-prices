@@ -1,5 +1,5 @@
 {
-    "name": "packback/textbook-prices",
+    "name": "packbackbooks/textbook-prices",
     "type": "library",
     "description": "Making it simple to integrate your application with textbook price apis.",
     "keywords": [

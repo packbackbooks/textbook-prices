@@ -36,6 +36,14 @@ $prices = $abeBooks->getPricesForIsbns($isbns);
 
 ```
 
+## Including in your project
+
+```
+"require": {
+        "packbackbooks/textbook-price": "dev-master",
+}
+```
+
 ## Notes
 
 This package is compliant with [PSR-1][], [PSR-2][] and [PSR-4][]. If you notice compliance oversights, please send
