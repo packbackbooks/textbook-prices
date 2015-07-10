@@ -1,8 +1,7 @@
 <?php namespace Packback\Prices\Clients;
 
-use Packback\Prices\PriceClient;
-
-use ApaiIO\Configuration\GenericConfiguration,
+use Packback\Prices\PriceClient,
+    ApaiIO\Configuration\GenericConfiguration,
     ApaiIO\Operations\Search,
     ApaiIO\ApaiIO;
 
@@ -69,7 +68,7 @@ class AmazonPriceClient extends PriceClient
 
     public function addPricesToCollection($response)
     {
-        if(isset($response->Items->Request->IsValid) && $response->Items->Request->IsValid) {
+        if (isset($response->Items->Request->IsValid) && $response->Items->Request->IsValid) {
             if (isset($response->Items->Item)) {
                 $items = $response->Items->Item;
                 foreach ($items as $key => $item) {
@@ -96,9 +95,9 @@ class AmazonPriceClient extends PriceClient
         // Set retailer
         $price->retailer = $merchant_id;
         // Populate ISBN 13
-        if (isset($item->ItemAttributes->EAN) ) {
+        if (isset($item->ItemAttributes->EAN)) {
             $price->isbn13 = $item->ItemAttributes->EAN;
-        } elseif (isset($item->ItemAttributes->EISBN) ) {
+        } elseif (isset($item->ItemAttributes->EISBN)) {
             $price->isbn13 = $item->ItemAttributes->EISBN;
         }
         // Populate URL
