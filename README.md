@@ -2,7 +2,7 @@
 
 [![Latest Version](https://img.shields.io/github/release/Packbackbooks/textbook-prices.svg?style=flat-square)](https://github.com/Packbackbooks/textbook-prices/releases)
 [![Software License](https://img.shields.io/badge/license-APACHE%202.0-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/Packbackbooks/textbook-prices/master.svg?style=flat-square&1)](https://travis-ci.org/Packbackbooks/textbook-prices)
+[![Build Status](https://img.shields.io/travis/packbackbooks/textbook-prices/master.svg?style=flat-square&1)](https://travis-ci.org/packbackbooks/textbook-prices)
 [![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/Packbackbooks/textbook-prices.svg?style=flat-square)](https://scrutinizer-ci.com/g/Packbackbooks/textbook-prices/code-structure)
 [![Quality Score](https://img.shields.io/scrutinizer/g/Packbackbooks/textbook-prices.svg?style=flat-square)](https://scrutinizer-ci.com/g/Packbackbooks/textbook-prices)
 [![Total Downloads](https://img.shields.io/packagist/dt/Packbackbooks/textbook-prices.svg?style=flat-square)](https://packagist.org/packages/Packbackbooks/textbook-prices)
