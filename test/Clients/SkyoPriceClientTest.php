@@ -7,7 +7,7 @@ class SkyoPriceClientTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        include 'config.php';
+        include 'config.example.php';
         $this->client = new SkyoPriceClient($config);
         $this->client->client = m::mock('CROSCON\CommissionJunction\Client');
     }

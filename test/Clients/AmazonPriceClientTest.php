@@ -7,7 +7,7 @@ class AmazonPriceClientTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        include 'config.php';
+        include 'config.example.php';
         $this->client = new AmazonPriceClient($config['amazon']);
         $this->client->conf = m::mock('ApaiIO\Configuration\GenericConfiguration');
         $this->client->container = m::mock('ApaiIO\ApaiIO');

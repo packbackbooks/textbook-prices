@@ -7,7 +7,7 @@ class CheggPriceClientTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        include 'config.php';
+        include 'config.example.php';
         $this->client = new CheggPriceClient($config['chegg']);
         $this->client->client = m::mock('GuzzleHttp\Client');
     }

@@ -7,7 +7,7 @@ class CommissionJunctionPriceClientTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        include 'config.php';
+        include 'config.example.php';
         $this->retailer = 'bookrenter';
         $cj_config = array_merge($config['cj'], $config[$this->retailer]);
 

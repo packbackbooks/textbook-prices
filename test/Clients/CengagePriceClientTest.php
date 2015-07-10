@@ -7,7 +7,7 @@ class CengagePriceClientTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        include 'config.php';
+        include 'config.example.php';
         $this->client = new CengagePriceClient($config);
         $this->client->client = m::mock('CROSCON\CommissionJunction\Client');
     }
