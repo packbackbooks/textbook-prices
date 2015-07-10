@@ -1,8 +1,8 @@
 <?php namespace Packback\Prices\Clients;
 
-class BookRenterPriceClient extends CommissionJunctionPriceClient
+class CengagePriceClient extends CommissionJunctionPriceClient
 {
-    const RETAILER = 'bookrenter';
+    const RETAILER = 'cengage';
 
     public function __construct($config = [])
     {
@@ -13,7 +13,7 @@ class BookRenterPriceClient extends CommissionJunctionPriceClient
     public function getPricesForIsbns($isbns = [])
     {
         foreach ($isbns as $isbn) {
-            $response = $this->addParam('isbn', $isbn)->send();
+            $response = $this->addParam('upc', $isbn)->send();
             $this->addPricesToCollection($response);
         }
         $this->addMetaToPrices($this->collection);
