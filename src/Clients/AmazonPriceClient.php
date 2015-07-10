@@ -9,7 +9,6 @@ use ApaiIO\Configuration\GenericConfiguration,
 class AmazonPriceClient extends PriceClient
 {
     const RETAILER = 'amazon';
-    const RETAILER_MARKETPLACE = 'amazon-marketplace';
 
     public $conf;
     public $container;
@@ -59,38 +58,35 @@ class AmazonPriceClient extends PriceClient
 
             // Get response for Marketplace books
             $response = $this->send();
-            $marketplace_collection = $this->generateAmazonObjects($response, self::RETAILER_MARKETPLACE);
+            $this->addPricesToCollection($response);
             // Get response for only Amazon books
             $response = $this->addParam('MerchantId', 'Amazon')->send();
-            $amazon_collection = $this->generateAmazonObjects($response, self::RETAILER);
-
-            $this->collection = array_merge($amazon_collection, $marketplace_collection);
+            $this->addPricesToCollection($response);
         }
 
         return $this->collection;
     }
 
-    private function generateAmazonObjects($response, $merchant_id = null)
+    public function addPricesToCollection($response)
     {
-        $collection = [];
         if(isset($response->Items->Request->IsValid) && $response->Items->Request->IsValid) {
-            if (isset($response->Items->Item) && isset($merchant_id)) {
+            if (isset($response->Items->Item)) {
                 $items = $response->Items->Item;
                 foreach ($items as $key => $item) {
                     // Create price objects for each offer
                     if (isset($item->Offers->Offer)) {
                         if (is_array($item->Offers->Offer)) {
                             foreach ($item->Offers->Offer as $offer) {
-                                $collection[] = $this->populatePriceData($offer, $item, $merchant_id);
+                                $this->collection[] = $this->populatePriceData($offer, $item, self::RETAILER);
                             }
                         } else {
-                            $collection[] = $this->populatePriceData($item->Offers->Offer, $item, $merchant_id);
+                            $this->collection[] = $this->populatePriceData($item->Offers->Offer, $item, self::RETAILER);
                         }
                     }
                 }
             }
         }
-        return $collection;
+        return $this->collection;
     }
 
     public function populatePriceData($offer, $item, $merchant_id)

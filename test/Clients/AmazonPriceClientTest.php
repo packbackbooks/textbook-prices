@@ -240,7 +240,7 @@ class AmazonPriceClientTest extends \PHPUnit_Framework_TestCase
 
         $results = $this->client->getPricesForIsbns($isbns);
 
-        $this->assertEquals($items*2, count($results));
+        $this->assertEquals($items*4, count($results));
     }
 
     public function testPopulatePriceDataWithEan()

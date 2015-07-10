@@ -3,7 +3,7 @@
 use Packback\Prices\PriceDto;
 use GuzzleHttp\Client as GuzzleClient;
 
-class PriceClient
+abstract class PriceClient
 {
     const CONDITION_NEW = 'new';
     const CONDITION_GOOD = 'good';
@@ -28,6 +28,10 @@ class PriceClient
         $this->client = new GuzzleClient();
     }
 
+    abstract public function getPricesForIsbns($isbns = []);
+
+    abstract public function addPricesToCollection($response);
+
     public function addParam($key, $value)
     {
         $this->query[$key] = $value;
@@ -46,7 +50,6 @@ class PriceClient
             // Return error messaging
             return $e->getMessage();
         }
-        return null;
     }
 
     public function decodeXml($string)

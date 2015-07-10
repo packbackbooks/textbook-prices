@@ -1,4 +1,6 @@
-<?php namespace Packback\Prices\Test;
+<?php
+/*
+namespace Packback\Prices\Test;
 
 use Packback\Prices\Clients\PriceClient;
 use Mockery as m;
@@ -107,5 +109,6 @@ class PriceClientTest extends \PHPUnit_Framework_TestCase
 
         $this->client->getConditionFromString($string);
     }
-
 }
+
+*/
