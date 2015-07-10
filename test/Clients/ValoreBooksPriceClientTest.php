@@ -12,19 +12,6 @@ class ValoreBooksPriceClientTest extends \PHPUnit_Framework_TestCase
         $this->client->client = m::mock('GuzzleHttp\Client');
     }
 
-    public function testTheWholeThing()
-    {
-        include 'config.php';
-        $this->client = new ValoreBooksPriceClient($config['valore']);
-        $isbns = [
-            '9780000000071',
-            '9780001203020',
-            '9780007205707',
-        ];
-        // $results = $this->client->getPricesForIsbns($isbns);
-        // print_r($results); exit;
-    }
-
     public function testItAddsSalePriceToCollection()
     {
         $response = $this->generateResponse([

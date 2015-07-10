@@ -16,7 +16,7 @@ class AmazonPriceClientTest extends \PHPUnit_Framework_TestCase
 
     public function testItSetsConfigurationWithSuccess()
     {
-        include 'config.php';
+        include 'config.example.php';
 
         $this->client->conf->shouldReceive('setCountry')
             ->with('com')
