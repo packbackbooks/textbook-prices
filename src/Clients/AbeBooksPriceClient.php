@@ -9,7 +9,7 @@ class AbeBooksPriceClient extends PriceClient
     public function __construct($config = [])
     {
         parent::__construct();
-        $this->baseUrl = $config['api_url'];
+        $this->baseUrl = 'http://search2.abebooks.com/search';
         $this->query['clientkey'] = $config['access_key'];
     }
 
@@ -27,7 +27,7 @@ class AbeBooksPriceClient extends PriceClient
     {
         // Check response, populate price object, send collection back
         if (isset($response['Book'])) {
-            foreach($response['Book'] as $offer) {
+            foreach ($response['Book'] as $offer) {
                 $offer = (object) $offer;
                 $price = $this->createNewPrice();
                 if (isset($offer->listingPrice)) {
@@ -51,5 +51,4 @@ class AbeBooksPriceClient extends PriceClient
         }
         return $this;
     }
-
 }
