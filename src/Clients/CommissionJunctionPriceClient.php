@@ -10,7 +10,6 @@ class CommissionJunctionPriceClient extends PriceClient
         $this->client = new Client($config['key']);
         $this->query['website-id'] = $config['website'];
         $this->query['advertiser-ids'] = $config['cj_advertiser_id'];
-        $this->retailer = $config['retailer'];
     }
 
     public function getPricesForIsbns($isbns = [])
@@ -44,7 +43,6 @@ class CommissionJunctionPriceClient extends PriceClient
         $price->price = $product->price;
         $price->url = $product->{'buy-url'};
         $price->shipping_price = null;
-        $price->retailer = $this->retailer;
         return $price;
     }
 

@@ -12,7 +12,7 @@ class CommissionJunctionPriceClientTest extends \PHPUnit_Framework_TestCase
         $cj_config = array_merge($config['cj'], $config[$this->retailer]);
 
         $this->client = new CommissionJunctionPriceClient($cj_config);
-        $this->client->client = m::mock('GuzzleHttp\Client');
+        $this->client->client = m::mock('CROSCON\CommissionJunction\Client');
     }
 
     public function testItBuildsPriceCollectionFromSingleValidResponse()
@@ -26,7 +26,6 @@ class CommissionJunctionPriceClientTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($response->products->product->isbn, $book->isbn13 );
             $this->assertEquals($response->products->product->price, $book->price );
             $this->assertEquals($response->products->product->{'buy-url'}, $book->url );
-            $this->assertEquals($this->retailer, $book->retailer );
         }
     }
 
@@ -42,7 +41,6 @@ class CommissionJunctionPriceClientTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($response->products->product[$key]->isbn, $book->isbn13 );
             $this->assertEquals($response->products->product[$key]->price, $book->price );
             $this->assertEquals($response->products->product[$key]->{'buy-url'}, $book->url );
-            $this->assertEquals($this->retailer, $book->retailer );
         }
         $this->assertEquals($count, count($this->client->collection));
     }
