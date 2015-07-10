@@ -1,6 +1,6 @@
 <?php namespace Packback\Prices\Clients;
 
-use Packback\Prices\Clients\PriceClient;
+use Packback\Prices\PriceClient;
 
 class ValoreBooksPriceClient extends PriceClient
 {

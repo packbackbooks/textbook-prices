@@ -1,7 +1,7 @@
 <?php namespace Packback\Prices\Clients;
 
 use CROSCON\CommissionJunction\Client;
-use Packback\Prices\Clients\PriceClient;
+use Packback\Prices\PriceClient;
 
 class CommissionJunctionPriceClient extends PriceClient
 {

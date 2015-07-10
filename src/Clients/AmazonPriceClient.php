@@ -1,7 +1,7 @@
 <?php namespace Packback\Prices\Clients;
 
-use Packback\Prices\Clients\PriceClient;
-use Packback\Prices\PriceDto;
+use Packback\Prices\PriceClient;
+
 use ApaiIO\Configuration\GenericConfiguration,
     ApaiIO\Operations\Search,
     ApaiIO\ApaiIO;
@@ -92,7 +92,7 @@ class AmazonPriceClient extends PriceClient
     public function populatePriceData($offer, $item, $merchant_id)
     {
         // New price model object
-        $price = new PriceDto;
+        $price = $this->createNewPrice();
         // Set retailer
         $price->retailer = $merchant_id;
         // Populate ISBN 13

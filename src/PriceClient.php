@@ -1,4 +1,4 @@
-<?php namespace Packback\Prices\Clients;
+<?php namespace Packback\Prices;
 
 use Packback\Prices\PriceDto;
 use GuzzleHttp\Client as GuzzleClient;

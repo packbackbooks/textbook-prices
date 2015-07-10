@@ -1,5 +1,5 @@
 # Packback Textbook Price Collector
-This public project is designed to make interfacing with the most common textbook sellers easy. 
+This public project is designed to make interfacing with the most common textbook sellers easy.
 The following clients can be accessed with this project:
 
 - AbeBooks
@@ -9,3 +9,6 @@ The following clients can be accessed with this project:
 - Chegg
 - Skyo
 - ValoreBooks
+
+## Getting prices for a provider
+
