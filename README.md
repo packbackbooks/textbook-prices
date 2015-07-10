@@ -40,7 +40,7 @@ $prices = $abeBooks->getPricesForIsbns($isbns);
 
 ```
 "require": {
-        "packbackbooks/textbook-price": "dev-master",
+        "packbackbooks/textbook-price": "dev-master"
 }
 ```
 

@@ -46,7 +46,7 @@ abstract class PriceClient
             if ($response->getStatusCode() == '200') {
                 return $this->decodeXml($response->getBody(true));
             }
-        } catch ( \Exception $e) {
+        } catch (\Exception $e) {
             // Return error messaging
             return $e->getMessage();
         }
@@ -125,5 +125,4 @@ abstract class PriceClient
                 return null;
         }
     }
-
 }

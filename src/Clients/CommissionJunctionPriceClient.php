@@ -60,8 +60,8 @@ class CommissionJunctionPriceClient extends PriceClient
     public function send()
     {
         try {
-            return json_decode(json_encode($this->client->productSearch($this->query)), FALSE);
-        } catch ( \Exception $e) {
+            return json_decode(json_encode($this->client->productSearch($this->query)), false);
+        } catch (\Exception $e) {
             // Return error messaging
             return $e->getMessage();
         }

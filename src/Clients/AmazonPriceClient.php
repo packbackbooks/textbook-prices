@@ -1,9 +1,9 @@
 <?php namespace Packback\Prices\Clients;
 
-use Packback\Prices\PriceClient,
-    ApaiIO\Configuration\GenericConfiguration,
-    ApaiIO\Operations\Search,
-    ApaiIO\ApaiIO;
+use Packback\Prices\PriceClient;
+use ApaiIO\Configuration\GenericConfiguration;
+use ApaiIO\Operations\Search;
+use ApaiIO\ApaiIO;
 
 class AmazonPriceClient extends PriceClient
 {

@@ -9,7 +9,7 @@ class ValoreBooksPriceClient extends PriceClient
     public function __construct($config = [])
     {
         parent::__construct();
-        $this->baseUrl = $config['api_url'];
+        $this->baseUrl = 'http://prices.valorebooks.com/lookup-multiple-categories';
         $this->query['SiteID'] = $config['site_id'];
     }
 

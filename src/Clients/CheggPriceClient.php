@@ -9,7 +9,7 @@ class CheggPriceClient extends PriceClient
     public function __construct($config = [])
     {
         parent::__construct();
-        $this->baseUrl = $config['api_url'];
+        $this->baseUrl = 'http://api.chegg.com/rent.svc';
         $this->query['KEY'] = $config['access_key'];
         $this->query['PW'] = $config['secret_key'];
         $this->query['R'] = 'XML';
@@ -71,7 +71,6 @@ class CheggPriceClient extends PriceClient
             && isset($payload['Items']['Item'])
             && isset($payload['Items']['Item']['Terms'])
             && isset($payload['Items']['Item']['Terms']['Term'])) {
-
             return true;
         }
         return false;

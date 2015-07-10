@@ -22,7 +22,7 @@ class BookRenterPriceClient extends CommissionJunctionPriceClient
 
     private function addMetaToPrices($prices = [])
     {
-        foreach($prices as $i => $price) {
+        foreach ($prices as $i => $price) {
             $prices[$i]->retailer = self::RETAILER;
             $prices[$i]->condition = parent::CONDITION_NEW;
             $prices[$i]->term = parent::TERM_SEMESTER;
