@@ -38,11 +38,15 @@ $prices = $abeBooks->getPricesForIsbns($isbns);
 
 ## Including in your project
 
+Add the following to your `composer.json` file:
+
 ```
 "require": {
-        "packbackbooks/textbook-prices": "~0.1.0"
+        "packbackbooks/textbook-prices": "~0.1.1"
 }
 ```
+
+You must also have `"minimum-stability": "dev"` in your `composer.json` file so that Composer can fetch `dev-master` versions of packages.
 
 ## Notes
 
