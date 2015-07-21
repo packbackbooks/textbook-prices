@@ -24,7 +24,7 @@ can be accessed with this project:
 All clients extend the abstract PriceClient class. As an example, get prices
 from Abe Books for a group of ISBNs is done as follows:
 
-```
+```php
 $isbns = [
     // ISBNS
 ];
@@ -40,7 +40,7 @@ $prices = $abeBooks->getPricesForIsbns($isbns);
 
 Add the following to your `composer.json` file:
 
-```
+```json
 "require": {
         "packbackbooks/textbook-prices": "~0.1.1"
 }
