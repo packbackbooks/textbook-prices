@@ -73,6 +73,30 @@ class ValoreBooksPriceClientTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testItAddsRentalAndSalePriceToCollectionWhenNoStandardShipping()
+    {
+        $response = $this->generateResponse([
+            'rental' => true,
+            'sale' => true,
+            'shipping' => true,
+            'shipping_method' => 'Really Expedited',
+        ]);
+        $this->client->collection = [];
+
+        $this->client->addPricesToCollection($response);
+        foreach ($this->client->collection as $key => $book) {
+            $this->assertEquals($response['product-code'], $book->isbn13 );
+            if ($book->{'price'} === $response['rental-offer']['ninty-day-price']) {
+                $this->assertEquals($response['rental-offer']['ninty-day-price'], $book->{'price'} );
+            } elseif ($book->{'price'} === $response['rental-offer']['semester-price']) {
+                $this->assertEquals($response['rental-offer']['semester-price'], $book->{'price'} );
+            } else {
+                $this->assertEquals($response['sale-offer']['price'], $book->price );
+            }
+            $this->assertEquals('valorebooks', $book->retailer );
+        }
+    }
+
     public function testItBuildsPriceCollectionFromValidResponse()
     {
         $response = $this->generateResponse();
@@ -174,7 +198,7 @@ class ValoreBooksPriceClientTest extends \PHPUnit_Framework_TestCase
                 $book['sale-offer']['shipping-options'] = [
                     'shipping' => [
                         0 => [
-                            'method' => 'Standard',
+                            'method' => isset($options['shipping_method']) ? $options['shipping_method'] : 'Standard',
                             'price-first' => '3.95',
                         ],
                         1 => [
@@ -195,10 +219,8 @@ class ValoreBooksPriceClientTest extends \PHPUnit_Framework_TestCase
                 'quantity' => '1',
                 'shipping-options' => [
                     'shipping' => [
-                        1 => [
-                            'method' => 'Expedited',
-                            'price-first' => '6.95',
-                        ],
+                        'method' => 'Standard',
+                        'price-first' => '6.95',
                     ],
                 ],
             ];

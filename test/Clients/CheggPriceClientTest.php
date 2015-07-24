@@ -40,6 +40,48 @@ class CheggPriceClientTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testItBuildsPriceCollectionFromValidResponseWith60DaysTerm()
+    {
+        $response = $this->generateResponse(['term' => 'rent for 60 days']);
+        $this->client->collection = [];
+
+        $results = $this->client->addPricesToCollection($response);
+
+        foreach ($this->client->collection as $key => $book) {
+            $this->assertEquals($response['Items']['Item']['EAN'], $book->isbn13 );
+            $this->assertEquals($response['Items']['Item']['Terms']['Term'][0]['Price'], $book->price );
+            $this->assertEquals('chegg', $book->retailer );
+        }
+    }
+
+    public function testItBuildsPriceCollectionFromValidResponseWith45DaysTerm()
+    {
+        $response = $this->generateResponse(['term' => 'rent for 45 days']);
+        $this->client->collection = [];
+
+        $results = $this->client->addPricesToCollection($response);
+
+        foreach ($this->client->collection as $key => $book) {
+            $this->assertEquals($response['Items']['Item']['EAN'], $book->isbn13 );
+            $this->assertEquals($response['Items']['Item']['Terms']['Term'][0]['Price'], $book->price );
+            $this->assertEquals('chegg', $book->retailer );
+        }
+    }
+
+    public function testItBuildsPriceCollectionFromValidResponseWith30DaysTerm()
+    {
+        $response = $this->generateResponse(['term' => 'rent for 30 days']);
+        $this->client->collection = [];
+
+        $results = $this->client->addPricesToCollection($response);
+
+        foreach ($this->client->collection as $key => $book) {
+            $this->assertEquals($response['Items']['Item']['EAN'], $book->isbn13 );
+            $this->assertEquals($response['Items']['Item']['Terms']['Term'][0]['Price'], $book->price );
+            $this->assertEquals('chegg', $book->retailer );
+        }
+    }
+
     public function testItDoesNotBuildPriceCollectionWithInvalidResponse()
     {
         $response = [uniqid()];
@@ -95,7 +137,7 @@ class CheggPriceClientTest extends \PHPUnit_Framework_TestCase
                 'Term' => [
                     0 => [
                         'Price' => rand(10,200),
-                        'Term' => 'new',
+                        'Term' => isset($options['term']) ? $options['term'] : 'new',
                     ],
                 ],
             ],

@@ -142,7 +142,7 @@ class AbeBooksPriceClientTest extends \PHPUnit_Framework_TestCase
             <isbn10>025536251X</isbn10>
             <isbn13>'.$isbn.'</isbn13>
             <listingCondition>NOT NEW BOOK</listingCondition>
-            <itemCondition>Very Good</itemCondition>
+            <itemCondition>Fair</itemCondition>
             <quantity>1</quantity>
             <vendorCurrency>GBP</vendorCurrency>
             <listingPrice>1.0</listingPrice>

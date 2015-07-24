@@ -310,7 +310,7 @@ class AmazonPriceClientTest extends \PHPUnit_Framework_TestCase
     {
         $singleOffer = (object) [
             'OfferAttributes' => (object) [
-                'Condition' => 'New'
+                'Condition' => ['New', 'Poor'][rand(0,1)]
             ],
             'OfferListing' => (object) [
                 'OfferListingId' => uniqid(),

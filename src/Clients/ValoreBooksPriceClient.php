@@ -108,7 +108,7 @@ class ValoreBooksPriceClient extends PriceClient
         if (isset($offer['shipping-options'])) {
             if (isset($offer['shipping-options']['shipping']['price-first'])) {
                 return $offer['shipping-options']['shipping']['price-first'];
-            } else if (isset($offer['shipping-options']['shipping'][0]['price-first'])) {
+            } elseif (isset($offer['shipping-options']['shipping'][0]['price-first'])) {
                 foreach ($offer['shipping-options']['shipping'] as $option) {
                     if ($option['method'] == 'Standard') {
                         return $option['price-first'];
