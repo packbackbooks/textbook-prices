@@ -105,10 +105,14 @@ class ValoreBooksPriceClient extends PriceClient
 
     private function getLowestShippingPriceFromOffer($offer = null)
     {
-        if (isset($offer['shipping-options']) && is_array($offer['shipping-options']['shipping'])) {
-            foreach ($offer['shipping-options']['shipping'] as $option) {
-                if ($option['method'] == 'Standard') {
-                    return $option['price-first'];
+        if (isset($offer['shipping-options'])) {
+            if (isset($offer['shipping-options']['shipping']['price-first'])) {
+                return $offer['shipping-options']['shipping']['price-first'];
+            } else if (isset($offer['shipping-options']['shipping'][0]['price-first'])) {
+                foreach ($offer['shipping-options']['shipping'] as $option) {
+                    if ($option['method'] == 'Standard') {
+                        return $option['price-first'];
+                    }
                 }
             }
         }
