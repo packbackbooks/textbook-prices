@@ -1,6 +1,20 @@
 # Changelog
 All Notable changes to `textbook-prices` will be documented in this file
 
+## 0.1.2 - 2015-07-24
+
+### Added
+- Nothing
+
+### Deprecated
+- Nothing
+
+### Fixed
+- ValoreBooks client throwing an error when there was only one shipping option.
+
+### Security
+- Nothing
+
 ## 0.1.1 - 2015-07-21
 
 ### Added
