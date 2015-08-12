@@ -92,6 +92,7 @@ abstract class PriceClient
             case 'used':
             case 'collectible':
                 return self::CONDITION_GOOD;
+            case 'near fine':
             case 'fine':
             case 'fair':
             case 'acceptable':

@@ -1,6 +1,20 @@
 # Changelog
 All Notable changes to `textbook-prices` will be documented in this file
 
+## 0.1.3 - 2015-08-24
+
+### Added
+- Nothing
+
+### Deprecated
+- Nothing
+
+### Fixed
+- "Near Fine" was not being caught as a condition for some books.
+
+### Security
+- Nothing
+
 ## 0.1.2 - 2015-07-24
 
 ### Added
