@@ -1,7 +1,7 @@
 # Changelog
 All Notable changes to `textbook-prices` will be documented in this file
 
-## 0.1.3 - 2015-08-24
+## 0.1.3 - 2015-08-12
 
 ### Added
 - Nothing
