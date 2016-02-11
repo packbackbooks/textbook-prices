@@ -8,6 +8,11 @@ class ValoreBooksPriceClient extends PriceClient
 
     public function __construct($config = [])
     {
+        if (!isset($config['site_id'])) {
+            throw new \InvalidArgumentException(
+                'A "site_id" key must be included in the $config array argument'
+            );
+        }
         parent::__construct();
         $this->baseUrl = 'http://prices.valorebooks.com/lookup-multiple-categories';
         $this->query['SiteID'] = $config['site_id'];
