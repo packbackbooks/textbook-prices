@@ -12,6 +12,12 @@ class ValoreBooksPriceClientTest extends \PHPUnit_Framework_TestCase
         $this->client->client = m::mock('GuzzleHttp\Client');
     }
 
+    public function testExceptionIsThrownOnMissingSiteId()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+        $this->client = new ValoreBooksPriceClient();
+    }
+
     public function testItAddsSalePriceToCollection()
     {
         $response = $this->generateResponse([
