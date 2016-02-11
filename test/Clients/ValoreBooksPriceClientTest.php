@@ -28,9 +28,9 @@ class ValoreBooksPriceClientTest extends \PHPUnit_Framework_TestCase
 
         $this->client->processSalePrices($response);
         foreach ($this->client->collection as $key => $book) {
-            $this->assertEquals($response['product-code'], $book->isbn13 );
-            $this->assertEquals($response['sale-offer']['price'], $book->price );
-            $this->assertEquals('valorebooks', $book->retailer );
+            $this->assertEquals($response['product-code'], $book->isbn13);
+            $this->assertEquals($response['sale-offer']['price'], $book->price);
+            $this->assertEquals('valorebooks', $book->retailer);
         }
     }
 
@@ -44,15 +44,15 @@ class ValoreBooksPriceClientTest extends \PHPUnit_Framework_TestCase
 
         $this->client->processRentalPrices($response);
         foreach ($this->client->collection as $key => $book) {
-            $this->assertEquals($response['product-code'], $book->isbn13 );
+            $this->assertEquals($response['product-code'], $book->isbn13);
             if ($book->{'price'} === $response['rental-offer']['ninty-day-price']) {
-                $this->assertEquals($response['rental-offer']['ninty-day-price'], $book->{'price'} );
+                $this->assertEquals($response['rental-offer']['ninty-day-price'], $book->{'price'});
             } elseif ($book->{'price'} === $response['rental-offer']['semester-price']) {
-                $this->assertEquals($response['rental-offer']['semester-price'], $book->{'price'} );
+                $this->assertEquals($response['rental-offer']['semester-price'], $book->{'price'});
             } else {
-                $this->assertEquals($response['sale-offer']['price'], $book->price );
+                $this->assertEquals($response['sale-offer']['price'], $book->price);
             }
-            $this->assertEquals('valorebooks', $book->retailer );
+            $this->assertEquals('valorebooks', $book->retailer);
         }
     }
 
@@ -67,15 +67,15 @@ class ValoreBooksPriceClientTest extends \PHPUnit_Framework_TestCase
 
         $this->client->addPricesToCollection($response);
         foreach ($this->client->collection as $key => $book) {
-            $this->assertEquals($response['product-code'], $book->isbn13 );
+            $this->assertEquals($response['product-code'], $book->isbn13);
             if ($book->{'price'} === $response['rental-offer']['ninty-day-price']) {
-                $this->assertEquals($response['rental-offer']['ninty-day-price'], $book->{'price'} );
+                $this->assertEquals($response['rental-offer']['ninty-day-price'], $book->{'price'});
             } elseif ($book->{'price'} === $response['rental-offer']['semester-price']) {
-                $this->assertEquals($response['rental-offer']['semester-price'], $book->{'price'} );
+                $this->assertEquals($response['rental-offer']['semester-price'], $book->{'price'});
             } else {
-                $this->assertEquals($response['sale-offer']['price'], $book->price );
+                $this->assertEquals($response['sale-offer']['price'], $book->price);
             }
-            $this->assertEquals('valorebooks', $book->retailer );
+            $this->assertEquals('valorebooks', $book->retailer);
         }
     }
 
@@ -91,15 +91,15 @@ class ValoreBooksPriceClientTest extends \PHPUnit_Framework_TestCase
 
         $this->client->addPricesToCollection($response);
         foreach ($this->client->collection as $key => $book) {
-            $this->assertEquals($response['product-code'], $book->isbn13 );
+            $this->assertEquals($response['product-code'], $book->isbn13);
             if ($book->{'price'} === $response['rental-offer']['ninty-day-price']) {
-                $this->assertEquals($response['rental-offer']['ninty-day-price'], $book->{'price'} );
+                $this->assertEquals($response['rental-offer']['ninty-day-price'], $book->{'price'});
             } elseif ($book->{'price'} === $response['rental-offer']['semester-price']) {
-                $this->assertEquals($response['rental-offer']['semester-price'], $book->{'price'} );
+                $this->assertEquals($response['rental-offer']['semester-price'], $book->{'price'});
             } else {
-                $this->assertEquals($response['sale-offer']['price'], $book->price );
+                $this->assertEquals($response['sale-offer']['price'], $book->price);
             }
-            $this->assertEquals('valorebooks', $book->retailer );
+            $this->assertEquals('valorebooks', $book->retailer);
         }
     }
 
@@ -110,9 +110,9 @@ class ValoreBooksPriceClientTest extends \PHPUnit_Framework_TestCase
 
         $results = $this->client->addPricesToCollection($response);
         foreach ($this->client->collection as $key => $book) {
-            $this->assertEquals($response['product-code'], $book->isbn13 );
-            $this->assertEquals($response['sale-offer']['price'], $book->price );
-            $this->assertEquals('valorebooks', $book->retailer );
+            $this->assertEquals($response['product-code'], $book->isbn13);
+            $this->assertEquals($response['sale-offer']['price'], $book->price);
+            $this->assertEquals('valorebooks', $book->retailer);
         }
     }
 
