@@ -1,6 +1,20 @@
 # Changelog
 All Notable changes to `textbook-prices` will be documented in this file
 
+## 0.1.4 - 2016-02-11
+
+### Added
+- Exception handler when site_id not specified in Valore Books client
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Extra spaces, strange formatting in unit tests
+
+### Security
+- Nothing
+
 ## 0.1.3 - 2015-08-12
 
 ### Added
