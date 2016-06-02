@@ -20,8 +20,8 @@
     "require": {
         "php": ">=5.5.0",
         "guzzlehttp/guzzle": "~6.0",
-        "exeu/apai-io": "dev-master",
-        "croscon/commissionjunction-php": "dev-master"
+        "exeu/apai-io": "^1.10",
+        "croscon/commissionjunction-php": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": ">=4.6",
