@@ -131,6 +131,5 @@ class AmazonPriceClient extends PriceClient
         } catch (\Exception $e) {
             return false;
         }
-
     }
 }
