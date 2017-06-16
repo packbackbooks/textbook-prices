@@ -121,12 +121,7 @@ class AmazonPriceClient extends PriceClient
 
     public function send()
     {
-        try {
-            $response = $this->container->runOperation($this->search);
-        } catch (\Exception $e) {
-            \Log::error($e);
-            return false;
-        }
+        $response = $this->container->runOperation($this->search);
         return json_decode(json_encode($response));
     }
 }
