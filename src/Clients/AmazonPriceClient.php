@@ -23,15 +23,11 @@ class AmazonPriceClient extends PriceClient
 
     public function setConfiguration($config = [])
     {
-        try {
-            $this->conf
-                ->setCountry('com')
-                ->setAccessKey($config['access_key'])
-                ->setSecretKey($config['secret_key'])
-                ->setAssociateTag($config['associate_tag']);
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-        }
+        $this->conf
+            ->setCountry('com')
+            ->setAccessKey($config['access_key'])
+            ->setSecretKey($config['secret_key'])
+            ->setAssociateTag($config['associate_tag']);
         $this->conf->setResponseTransformer('\ApaiIO\ResponseTransformer\XmlToSimpleXmlObject');
     }
 
@@ -57,6 +53,10 @@ class AmazonPriceClient extends PriceClient
 
             // Get response for Marketplace books
             $response = $this->send();
+            // If there is an error with the API key, throw an exception
+            if (isset($response->Error)) {
+                throw new \Exception($response->Error->Code.': '.$response->Error->Message);
+            }
             $this->addPricesToCollection($response);
             // Get response for only Amazon books
             $response = $this->addParam('MerchantId', 'Amazon')->send();
@@ -121,15 +121,7 @@ class AmazonPriceClient extends PriceClient
 
     public function send()
     {
-        try {
-            $response = $this->container->runOperation($this->search);
-            return json_decode(
-                json_encode(
-                    $response
-                )
-            );
-        } catch (\Exception $e) {
-            return false;
-        }
+        $response = $this->container->runOperation($this->search);
+        return json_decode(json_encode($response));
     }
 }
